@@ -10,8 +10,10 @@ const Header = () => {
   return (
         <Navbar bg = "dark" variant = "dark" expand = "lg">
             <Container>
-                <Navbar.Brand href = "/" style = {{color: 'gold'}}>
-                    <FontAwesomeIcon icon = {faVideoSlash} />Gold
+                <Navbar.Brand href = "/" style = {{color: 'gold'}} className = "align-items-center">
+                    <div d-flex align-items-center> 
+                        ReviewMovies
+                    </div>
                 </Navbar.Brand>
                 <Navbar.Toggle aria-controls = "navbarScroll" />
                 <NavbarCollapse id = "navbarScroll">
@@ -20,11 +22,11 @@ const Header = () => {
                         style = {{maxHeight: '100px'}}
                         navbarScroll
                     >
-                        <NavLink className = "nav-link" to = "/">Home</NavLink>
-                        <NavLink className = "nav-link" to = "/watchlist">Watch List</NavLink>
+                        <NavLink className = "nav-link" to = "/" d-flex align-items-center>Home</NavLink>
+                        <NavLink className = "nav-link" to = "/watchlist" d-flex align-items-center>Watch List</NavLink>
                     </Nav>
-                    <Button variant = "outline-info" className = "me-2">Register</Button>
-                    <Button variant = "outline-info">Login</Button>
+                    <Button variant = "outline-info" className = "me-2" d-flex align-items-center>Register</Button>
+                    <Button variant = "outline-info" d-flex align-items-center>Login</Button>
                 </NavbarCollapse>
             </Container>
         </Navbar>
