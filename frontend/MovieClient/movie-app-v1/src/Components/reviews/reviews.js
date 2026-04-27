@@ -13,7 +13,7 @@ const Reviews = ({ getMovieData, movie, reviews = [], setReviews }) => {
 
     useEffect(() => {
         getMovieData(movieId);
-    }, []);
+    }, [movieId]);
 
     const addReview = async (e) => {
 
@@ -21,9 +21,8 @@ const Reviews = ({ getMovieData, movie, reviews = [], setReviews }) => {
             e.preventDefault();
             const reviewBody = revText.current.value;
             await api.post('/api/v1/reviews', { reviewBody, imdbId: movieId });
-            const updatedReviews = [...reviews, { body: reviewBody }];
             revText.current.value = '';
-            setReviews(updatedReviews);
+            getMovieData(movieId);
         } catch (e) {
             console.log(e);
         }
