@@ -1,5 +1,7 @@
 package Simple.Movie.API;
 
+import java.time.LocalDateTime;
+
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Update;
@@ -15,15 +17,17 @@ public class ReviewService {
         this.reviewRepository = reviewRepository;
         this.mongoTemplate = mongoTemplate;
     }
-    
+
     public Review createReview(String reviewBody, String imdbId) {
-        Review review = reviewRepository.insert(new Review(reviewBody));
+        Review review = reviewRepository.insert(
+            new Review(reviewBody, LocalDateTime.now())
+        );
 
         mongoTemplate.update(Movie.class)
             .matching(Criteria.where("imdbId").is(imdbId))
             .apply(new Update().push("reviewsIds").value(review))
             .first();
-            
+
         return review;
     }
 }

@@ -1,16 +1,17 @@
 package Simple.Movie.API;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import java.time.LocalDateTime;
 
 import org.bson.types.ObjectId;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Answers;
+import static org.mockito.ArgumentMatchers.any;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.mongodb.core.MongoTemplate;
 
@@ -34,7 +35,7 @@ public class ReviewServiceTest {
 
         when(reviewRepository.insert(any(Review.class))).thenReturn(review);
 
-        Review result = reviewService.createReview("Fantastic Movie, really enjoyed it!", "1234567890");
+        Review result = reviewService.createReview("Fantastic Movie, really enjoyed it!", "1234567890", LocalDateTime.now());
 
         assertEquals(review, result);
         verify(reviewRepository).insert(any(Review.class));

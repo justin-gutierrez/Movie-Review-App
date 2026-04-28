@@ -60,12 +60,28 @@ const Reviews = ({ getMovieData, movie, reviews = [], setReviews }) => {
                 {
                     reviews?.map((review) => {
                         return (
-                            <React.Fragment key={review.id ?? review.body}>
-                            <Row>
-                                <Col>
-                                    {review.body}
-                                </Col>
-                            </Row>
+                            <React.Fragment key={review.id?.timestamp ?? review.body}>
+                                <Row className="mb-2">
+                                    <Col>
+                                        <div>{review.body}</div>
+                                        <small className="fw-bold" style={{ fontSize: '14px', color: 'white' }}>
+                                            {review.created
+                                                ? new Date(review.created).toLocaleString([], {
+                                                    year: 'numeric',
+                                                    month: 'short',
+                                                    day: 'numeric',
+                                                    hour: 'numeric',
+                                                    minute: '2-digit'               
+                                                })
+                                                : ""}
+                                            </small>
+                                    </Col>
+                                </Row>
+                                <Row>
+                                    <Col>
+                                        <hr className="my-3" />
+                                    </Col>
+                                </Row>
                             </React.Fragment>
                         )
                     })

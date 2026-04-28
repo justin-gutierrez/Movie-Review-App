@@ -1,19 +1,20 @@
 package Simple.Movie.API;
 
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import java.time.LocalDateTime;
 
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Test;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(ReviewController.class)
 public class ReviewControllerTest {
@@ -30,7 +31,7 @@ public class ReviewControllerTest {
         review.setId(new ObjectId());
         review.setBody("Fantastic Movie, really enjoyed it!");
 
-        when(reviewService.createReview("Fantastic Movie, really enjoyed it!", "1234567890"))
+        when(reviewService.createReview("Fantastic Movie, really enjoyed it!", "1234567890", LocalDateTime.now()))
                 .thenReturn(review);
 
         mockMvc.perform(post("/api/v1/reviews")
@@ -47,6 +48,6 @@ public class ReviewControllerTest {
                 // ObjectId is serialized as an object (date/timestamp) in this test context.
                 .andExpect(jsonPath("$.id.timestamp").value(review.getId().getTimestamp()));
 
-        verify(reviewService).createReview("Fantastic Movie, really enjoyed it!", "1234567890");
+        verify(reviewService).createReview("Fantastic Movie, really enjoyed it!", "1234567890", LocalDateTime.now());
     }
 }
