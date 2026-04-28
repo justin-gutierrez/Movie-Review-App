@@ -1,13 +1,13 @@
 package Simple.Movie.API;
 
-import java.time.LocalDateTime;
-
 import org.bson.types.ObjectId;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Answers;
 import static org.mockito.ArgumentMatchers.any;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import static org.mockito.Mockito.verify;
@@ -29,16 +29,23 @@ public class ReviewServiceTest {
 
     @Test
     public void shouldCreateReview() {
-        Review review = new Review();
-        review.setId(new ObjectId());
-        review.setBody("Fantastic Movie, really enjoyed it!");
+        when(reviewRepository.insert(any(Review.class))).thenAnswer(invocation -> {
+            Review toInsert = invocation.getArgument(0, Review.class);
+            toInsert.setId(new ObjectId());
+            return toInsert;
+        });
 
-        when(reviewRepository.insert(any(Review.class))).thenReturn(review);
+        Review result = reviewService.createReview("Fantastic Movie, really enjoyed it!", "1234567890");
 
-        Review result = reviewService.createReview("Fantastic Movie, really enjoyed it!", "1234567890", LocalDateTime.now());
+        ArgumentCaptor<Review> reviewCaptor = ArgumentCaptor.forClass(Review.class);
+        verify(reviewRepository).insert(reviewCaptor.capture());
 
-        assertEquals(review, result);
-        verify(reviewRepository).insert(any(Review.class));
+        Review inserted = reviewCaptor.getValue();
+        assertEquals("Fantastic Movie, really enjoyed it!", inserted.getBody());
+        assertNotNull(inserted.getCreated());
+
+        assertEquals(inserted, result);
+        assertNotNull(result.getId());
         verify(mongoTemplate).update(Movie.class);
     }
 }

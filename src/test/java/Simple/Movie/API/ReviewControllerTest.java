@@ -27,11 +27,14 @@ public class ReviewControllerTest {
 
     @Test
     void shouldCreateReview() throws Exception {
+        LocalDateTime created = LocalDateTime.of(2026, 4, 27, 10, 0, 0);
+
         Review review = new Review();
         review.setId(new ObjectId());
         review.setBody("Fantastic Movie, really enjoyed it!");
+        review.setCreated(created);
 
-        when(reviewService.createReview("Fantastic Movie, really enjoyed it!", "1234567890", LocalDateTime.now()))
+        when(reviewService.createReview("Fantastic Movie, really enjoyed it!", "1234567890"))
                 .thenReturn(review);
 
         mockMvc.perform(post("/api/v1/reviews")
@@ -46,8 +49,10 @@ public class ReviewControllerTest {
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.body").value("Fantastic Movie, really enjoyed it!"))
                 // ObjectId is serialized as an object (date/timestamp) in this test context.
-                .andExpect(jsonPath("$.id.timestamp").value(review.getId().getTimestamp()));
+                .andExpect(jsonPath("$.id.timestamp").value(review.getId().getTimestamp()))
+                // Spring serializes LocalDateTime with seconds (e.g. 2026-04-27T10:00:00)
+                .andExpect(jsonPath("$.created").value("2026-04-27T10:00:00"));
 
-        verify(reviewService).createReview("Fantastic Movie, really enjoyed it!", "1234567890", LocalDateTime.now());
+        verify(reviewService).createReview("Fantastic Movie, really enjoyed it!", "1234567890");
     }
 }
