@@ -45,12 +45,10 @@ public class ReviewControllerTest {
                       "imdbId": "1234567890"
                     }
                     """))
-                .andExpect(status().isCreated())   // or isOk(), depending on your controller
+                .andExpect(status().isCreated())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.body").value("Fantastic Movie, really enjoyed it!"))
-                // ObjectId is serialized as an object (date/timestamp) in this test context.
                 .andExpect(jsonPath("$.id.timestamp").value(review.getId().getTimestamp()))
-                // Spring serializes LocalDateTime with seconds (e.g. 2026-04-27T10:00:00)
                 .andExpect(jsonPath("$.created").value("2026-04-27T10:00:00"));
 
         verify(reviewService).createReview("Fantastic Movie, really enjoyed it!", "1234567890");
